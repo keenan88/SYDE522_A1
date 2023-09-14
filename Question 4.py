@@ -68,29 +68,32 @@ plt.show()
 
 # C)
 print("C) ")
-poly_rmses = []
 
-F = np.matrix(sklearn.preprocessing.PolynomialFeatures(degree=2).fit_transform(diabetes.data))
 
-for regularizer in lambds:
-    regularized_inv = get_regularized_inv(F, regularizer)
+for poly_deg in range(0, 5):
+    poly_rmses = []
+    print(poly_deg)
+
+    F = np.matrix(sklearn.preprocessing.PolynomialFeatures(degree = poly_deg).fit_transform(diabetes.data))
     
-    weights = regularized_inv * np.transpose(np.matrix(diabetes.target))
+    for regularizer in lambds:
+        print(regularizer)
+        regularized_inv = get_regularized_inv(F, regularizer)
+        
+        weights = regularized_inv * np.transpose(np.matrix(diabetes.target))
+        
+        regressed_output = np.array(F * weights)
+        
+        rms_polys = rms_between_arrays(regressed_output, diabetes.target)
+         
+        poly_rmses.append(rms_polys)
+
+    plt.xscale('log')
+    plt.scatter(lambds, poly_rmses)
     
-    regressed_output = np.array(F * weights)
+    plt.ylim(0, 100)
     
-    rms_polys = rms_between_arrays(regressed_output, diabetes.target)
-     
-    poly_rmses.append(rms_polys)
-
-print(poly_rmses)
-
-plt.xscale('log')
-plt.scatter(lambds, poly_rmses)
-
-plt.ylim(0, 100)
-
-plt.show()
+    plt.show()
 
 
 
