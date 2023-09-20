@@ -95,7 +95,7 @@ plt.ylabel('% Accuracy')
 plt.xlim(0, xmax)
 plt.ylim(0, 100)
 
-plt.title("Accuracy Vs Learning Rate")
+plt.title("2B) Accuracy Vs Learning Rate")
 plt.show()
 
 print()
@@ -150,6 +150,7 @@ for i in range(len(digits_imgs)):
         axes[i, j].set_title("Target: " + str(digits_targets[i][j]))
 #        plt.title(f'target:{digits.target[i]}')
 
+plt.title("2D) Illustration of 8s, 1s, 9s, and 3s")
 plt.show()
 
 """

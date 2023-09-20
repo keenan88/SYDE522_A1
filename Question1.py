@@ -89,7 +89,7 @@ theta_column = np.ones((input_data.shape[0], 1), dtype=int)
 input_data = np.hstack((input_data, theta_column))
 
 
-plot_results(input_data, desired_output, -1, "Desired Output")
+plot_results(input_data, desired_output, -1, "1) Desired Output")
 
 
 weights= [1, -1, 0]

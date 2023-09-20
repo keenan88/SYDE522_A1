@@ -40,7 +40,7 @@ lambds = np.exp(np.linspace(-20,5,50))
 # A)
 print("A) ")
 
-"""
+
 
 training_rmses = []
 validation_rmses = []
@@ -65,7 +65,7 @@ plt.scatter(lambds, validation_rmses, label="Validation Vs Fit, RMSE")
 
 plt.xlabel("Regularizer Value")
 plt.ylabel("RMSE")
-plt.title("RMSE vs Regularizer Value")
+plt.title("4A) RMSE vs Regularizer Value")
 plt.ylim(0, 100)
 plt.legend()
 plt.show()
@@ -81,7 +81,7 @@ plt.show()
 # than it does with the testing data, but the RMSE for all regularizer values is not observed
 # To be consistently higher for the training data than it is for the testing data.
 
-"""
+
 
 # C/D)
 print("C/D) ")
@@ -111,7 +111,7 @@ plt.ylim(0, 125)
 plt.xscale('log')
 plt.xlabel("Regularizer")
 plt.ylabel("RMSE")
-plt.title("Polynomial Fits' RMSEs against Regularizer Values")    
+plt.title("3C/D) Polynomial Fits' RMSEs against Regularizer Values")    
 plt.legend()
 plt.show()
 

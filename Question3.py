@@ -53,7 +53,7 @@ train_y = np.sin(train_x*2*np.pi) + rng.normal(0,0.1,size=10)
 
 test_x = np.linspace(0, 1, 500)
 test_y = np.sin(test_x*2*np.pi)
-"""
+
 # A)
 print("A)")
 
@@ -68,6 +68,7 @@ regression_y = train_x_matrix * weights
     
 plt.scatter(train_x, np.array(regression_y), label= "Very Accurate \nLinear Regression")
 plt.legend()
+plt.title("3A) Linear Regression Against Training and Testing Data")
 
 plt.show()
 rmse_regression_vs_training = get_RMSE(train_y, np.array(regression_y.T)[0])
@@ -99,6 +100,7 @@ plt.scatter(train_x, np.array(regressed_output))
 
 polynomial_y = np.polyval(weights[::-1], precise_x)
 plt.scatter(precise_x, polynomial_y, color="orange", label="Degree 4 Polynomial Regression")
+plt.title("3B) Fourth Degree Polynomial Regression Against Testing and Training Data")
 plt.legend()
 plt.show()
 
@@ -139,12 +141,12 @@ for poly_degree in range(0,15):
     
     polynomial_y = np.polyval(weights[::-1], precise_x)
     
-    plt.plot(precise_x, polynomial_y, color="red",
+    plt.plot(precise_x, polynomial_y, color="orange",
              label = "Degree " + str(poly_degree) + " Poly Regression")
     
     original_points_regressed = np.polyval(weights[::-1], train_x)
     
-    plt.scatter(train_x, original_points_regressed, color="red", label="Given X points along regression")
+    plt.scatter(train_x, original_points_regressed, color="orange", label="Given X points along regression")
     
     
     
@@ -162,7 +164,7 @@ for poly_degree in range(0,15):
     print("RMSE Regression vs Testing: ", rmse_regression_vs_testing)
     print()
     
-    plt.title("Regression against Training and Testing Data")
+    plt.title("3C) Polynomial Regression against Training and Testing Data")
     plt.xlabel("Stimulus")
     plt.ylabel("Response")
     plt.legend()
@@ -180,10 +182,10 @@ plt.scatter(degree_linsapce, RMSEs_against_testing,
 plt.legend()
 plt.xlabel("Polynomial Degree")
 plt.ylabel("RMSE")
-plt.title("RMSEs Against Training & Testing Data")
+plt.title("3C) RMSEs Against Training & Testing Data")
 plt.show()
 
-"""
+
 # D)
 
 print("D)")
@@ -194,7 +196,6 @@ RMSEs_against_training = []
 RMSEs_against_testing = []
 
 for regularizer in lambds:
-    print(regularizer)
 
     train_x_matrix = generate_x_train_matrix(train_x, 10)
     
@@ -212,7 +213,7 @@ for regularizer in lambds:
     plt.scatter(train_x, original_points_regressed, color="orange", 
                 label="Original Points Regressed")
     
-    plt.title("Training, Testing, and Polyfit data with Degree 10 and Regularizer = " + str(regularizer))
+    plt.title("3D) Training, Testing, and Polyfit data with \n Degree 10 and Regularizer = " + str(regularizer))
     plt.legend()
     plt.xlabel("Stimulus")
     plt.ylabel("Response")
@@ -225,8 +226,6 @@ for regularizer in lambds:
 
     RMSEs_against_training.append(rmse_regression_vs_training)
     RMSEs_against_testing.append(rmse_regression_vs_testing)
-        
-    print()
 
 plt.semilogx(lambds, RMSEs_against_training,
             label="RMSE Against Training Data")
@@ -236,7 +235,7 @@ plt.semilogx(lambds, RMSEs_against_testing,
 plt.legend()
 plt.xlabel("Regularizer")
 plt.ylabel("RMSE")
-plt.title("RMSEs Against Training & Testing Data")
+plt.title("3D) RMSEs Against Training & Testing Data")
 plt.show()
 
 
