@@ -2,7 +2,8 @@
 """
 Created on Thu Sep 14 11:18:58 2023
 
-@author: Keena
+
+#Student ID: 20838709
 """
 
 import sklearn.datasets
@@ -19,16 +20,16 @@ def compare_results(desired_output, actual_results):
     accurate_classifications = 0
 
     for index in range(len(desired_output)):
-        if desired_output[index] ==actual_results[index]:
+        if desired_output[index] == actual_results[index]:
             accurate_classifications += 1
             
     pct_accuracy = 100 * accurate_classifications / len(desired_output)
     
     return pct_accuracy
     
-def plot_results(input_data, classifications, weights):
+def plot_results(input_data, classifications, weights, title):
     plt.figure(figsize=(6,6))
-    plt.scatter(input_data[:,0], input_data[:,1], c=np.where(classifications, class_0_clr, class_1_clr))
+    plt.scatter(input_data[:,0], input_data[:,1], c=np.where(classifications, class_1_clr, class_0_clr))
     plt.xlabel('$x_1$')
     plt.ylabel('$x_2$')
     
@@ -38,6 +39,7 @@ def plot_results(input_data, classifications, weights):
              
         plt.plot(boundary_x, boundary_y, label='Line', color='grey')
     
+    plt.title(title)
     plt.xlim(-3, 5)
     plt.ylim(-3, 6)
     plt.show()
@@ -72,10 +74,10 @@ red_class_num = 0
 blue_class_num = 1
 
 class_0 = 0
-class_0_clr = 'blue'
+class_0_clr = 'red'
 
 class_1 = 1
-class_1_clr = 'red'
+class_1_clr = 'blue'
 
 input_data, desired_output = sklearn.datasets.make_blobs(centers=[[-2, -2], [2, 2]], 
                                              cluster_std=[0.3, 1.5], 
@@ -87,25 +89,26 @@ theta_column = np.ones((input_data.shape[0], 1), dtype=int)
 input_data = np.hstack((input_data, theta_column))
 
 
-plot_results(input_data, desired_output, -1)
+plot_results(input_data, desired_output, -1, "Desired Output")
 
 
 weights= [1, -1, 0]
 learning_rate = 0.1
 
-# A)
+# A) [DONE]
 print("A) ")
 
 model_output_no_training = classify_points(input_data, weights)
     
-plot_results(input_data, model_output_no_training, weights)
+plot_results(input_data, model_output_no_training, weights, "1A) No Training")
 
-compare_results(desired_output,  model_output_no_training)
+pct_accuracy = compare_results(desired_output,  model_output_no_training)
     
 print("Weights: ", weights)
+print("Accuracy =", pct_accuracy, "%")
 print()
 
-# B)
+# B) [DONE]
 print("B) ")
 
 
@@ -117,9 +120,9 @@ pct_accuracy = compare_results(desired_output, model_output_trained)
 print("Weights: ", weights)
 print("Accuracy: ", pct_accuracy, "%")
 print()
-plot_results(input_data, model_output_trained, weights)
+plot_results(input_data, model_output_trained, weights, "1B) 1 Full Training Iteration")
 
-# C)
+# C) [DONE]
 print("C) ")
 
 weights = [1, -1, 0]
@@ -141,9 +144,9 @@ print("Repetitions: ", repetitions)
 print("Weights: ", weights)
 print("Accuracy: ", pct_accuracy, "%")
 print()
-plot_results(input_data, model_output_trained, weights)
+plot_results(input_data, model_output_trained, weights, "1C) Trained to 100% Accuracy")
 
-# D)
+# D) [DONE]
 print("D) ")
 
 learning_rates = [1, 0.01, 100]
@@ -168,7 +171,8 @@ for learning_rate in learning_rates:
     print("Weights: ", weights)
     print("Accuracy: ", pct_accuracy, "%")
     print()
-    plot_results(input_data, model_output_trained, weights)
+    title = "1D) Trained to 100% Accuracy, Learning Rate: " + str(learning_rate)  
+    plot_results(input_data, model_output_trained, weights, title)
 
 
     

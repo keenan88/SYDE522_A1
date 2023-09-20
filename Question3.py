@@ -1,6 +1,4 @@
-
-
-
+#Student ID: 20838709
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -36,15 +34,31 @@ def get_regularized_inv(train_x_matrix, regularizer):
     
     return regularized_inv
 
+def get_RMSE(Y_desired, Y_actual):
+    summation = 0
+    for des, act in zip(Y_desired, Y_actual):
+        summation += (des - act) ** 2
+        
+    summation /= len(Y_desired)
+    
+    summation = round(np.sqrt(summation), 2)
+    
+    return summation
+
 rng = np.random.RandomState(seed=0)
+
 train_x = np.linspace(0, 1, 10)
 precise_x = np.linspace(0, 1, 100)
 train_y = np.sin(train_x*2*np.pi) + rng.normal(0,0.1,size=10)
+
+test_x = np.linspace(0, 1, 500)
+test_y = np.sin(test_x*2*np.pi)
 """
 # A)
 print("A)")
 
-plt.scatter(train_x, train_y)
+plt.scatter(train_x, train_y, label= "Training Data")
+plt.scatter(test_x, test_y, label= "Testing Data")
 
 train_x_matrix = generate_x_train_matrix(train_x, 1)
 
@@ -52,9 +66,18 @@ weights = get_least_sqaures_inv(train_x_matrix) * np.transpose(np.matrix(train_y
 
 regression_y = train_x_matrix * weights
     
-plt.scatter(train_x, np.array(regression_y))
+plt.scatter(train_x, np.array(regression_y), label= "Very Accurate \nLinear Regression")
+plt.legend()
 
 plt.show()
+rmse_regression_vs_training = get_RMSE(train_y, np.array(regression_y.T)[0])
+# Only want every 50th item from test_y, since test_x covers same range as
+# train_x, but with 50x greater resolution.
+rmse_regression_vs_testing = get_RMSE(test_y[::50], np.array(regression_y.T)[0])
+
+print("Weights: ", weights.T)
+print("RMSE Regression vs Training: ", rmse_regression_vs_training)
+print("RMSE Regression vs Testing: ", rmse_regression_vs_testing)
 
 print()
 
@@ -63,7 +86,8 @@ print()
 
 print("B)")
 
-plt.scatter(train_x, train_y)
+plt.scatter(train_x, train_y, label= "Training Data")
+plt.scatter(test_x, test_y, label= "Testing Data")
 
 train_x_matrix = generate_x_train_matrix(train_x, 4)
 
@@ -72,21 +96,38 @@ weights = get_least_sqaures_inv(train_x_matrix) * np.transpose(np.matrix(train_y
 regressed_output = train_x_matrix * weights
 
 plt.scatter(train_x, np.array(regressed_output))
-4
+
 polynomial_y = np.polyval(weights[::-1], precise_x)
-plt.plot(precise_x, polynomial_y, label="Degree 4 Polynomial", color="orange")
+plt.scatter(precise_x, polynomial_y, color="orange", label="Degree 4 Polynomial Regression")
+plt.legend()
 plt.show()
 
+print("Regression weights: ", weights.T)
+
+rmse_regression_vs_training = get_RMSE(train_y, np.array(regressed_output.T)[0])
+# Only want every 50th item from test_y, since test_x covers same range as
+# train_x, but with 50x greater resolution.
+rmse_regression_vs_testing = get_RMSE(test_y[::50], np.array(regressed_output.T)[0])
+
+print("Weights: ", weights.T)
+print("RMSE Regression vs Training: ", rmse_regression_vs_training)
+print("RMSE Regression vs Testing: ", rmse_regression_vs_testing)
+
 print()
+
 
 
 # C)
 
 print("C)")
 
+RMSEs_against_training = []
+RMSEs_against_testing = []
+
 for poly_degree in range(0,15):
 
-    plt.scatter(train_x, train_y)
+    plt.scatter(train_x, train_y, label= "Training Data", color="black")
+    plt.scatter(test_x, test_y, label = "Testing Data", color="blue")
     
     train_x_matrix = generate_x_train_matrix(train_x, poly_degree)
     
@@ -97,26 +138,63 @@ for poly_degree in range(0,15):
     plt.scatter(train_x, np.array(regressed_output), color='blue')
     
     polynomial_y = np.polyval(weights[::-1], precise_x)
-    plt.plot(precise_x, polynomial_y, label="Degree 4 Polynomial", color="orange")
+    
+    plt.plot(precise_x, polynomial_y, color="red",
+             label = "Degree " + str(poly_degree) + " Poly Regression")
     
     original_points_regressed = np.polyval(weights[::-1], train_x)
-    plt.scatter(train_x, original_points_regressed, color="orange")
     
+    plt.scatter(train_x, original_points_regressed, color="red", label="Given X points along regression")
+    
+    
+    
+    rmse_regression_vs_training = get_RMSE(train_y, np.array(regressed_output.T)[0])
+    # Only want every 50th item from test_y, since test_x covers same range as
+    # train_x, but with 50x greater resolution.
+    rmse_regression_vs_testing = get_RMSE(test_y[::50], np.array(regressed_output.T)[0])
+
+    RMSEs_against_training.append(rmse_regression_vs_training)
+    RMSEs_against_testing.append(rmse_regression_vs_testing)
+
+    print("Degree " + str(poly_degree) + " Regression")
+    print("Weights: ", weights.T)
+    print("RMSE Regression vs Training: ", rmse_regression_vs_training)
+    print("RMSE Regression vs Testing: ", rmse_regression_vs_testing)
+    print()
+    
+    plt.title("Regression against Training and Testing Data")
+    plt.xlabel("Stimulus")
+    plt.ylabel("Response")
+    plt.legend()
     plt.show()
     
 print()
-"""
 
+degree_linsapce = np.linspace(0, 15, 15)
+
+plt.scatter(degree_linsapce, RMSEs_against_training,
+            label="RMSE Against Training Data")
+
+plt.scatter(degree_linsapce, RMSEs_against_testing,
+            label="RMSE Against Testing Data")
+plt.legend()
+plt.xlabel("Polynomial Degree")
+plt.ylabel("RMSE")
+plt.title("RMSEs Against Training & Testing Data")
+plt.show()
+
+"""
 # D)
 
 print("D)")
 
-
-
-
 lambds = np.exp(np.linspace(-50,-1, 50))
 
+RMSEs_against_training = []
+RMSEs_against_testing = []
+
 for regularizer in lambds:
+    print(regularizer)
 
     train_x_matrix = generate_x_train_matrix(train_x, 10)
     
@@ -124,22 +202,42 @@ for regularizer in lambds:
     
     regressed_output = train_x_matrix * weights
     
-    plt.scatter(train_x, np.array(regressed_output), color='blue')
-    
     polynomial_y = np.polyval(weights[::-1], precise_x)
-    plt.plot(precise_x, polynomial_y, label="Degree 4 Polynomial", color="orange")
+    plt.plot(precise_x, polynomial_y, label="Degree 10 Polynomial", color="orange")
     
-    plt.scatter(train_x, train_y, color='blue')
+    plt.scatter(train_x, train_y, label= "Training Data", color="black")
+    plt.scatter(test_x, test_y, label = "Testing Data", color="blue")
     
     original_points_regressed = np.polyval(weights[::-1], train_x)
-    plt.scatter(train_x, original_points_regressed, color="orange")
+    plt.scatter(train_x, original_points_regressed, color="orange", 
+                label="Original Points Regressed")
     
+    plt.title("Training, Testing, and Polyfit data with Degree 10 and Regularizer = " + str(regularizer))
+    plt.legend()
+    plt.xlabel("Stimulus")
+    plt.ylabel("Response")
     plt.show()
+    
+    rmse_regression_vs_training = get_RMSE(train_y, np.array(regressed_output.T)[0])
+    # Only want every 50th item from test_y, since test_x covers same range as
+    # train_x, but with 50x greater resolution.
+    rmse_regression_vs_testing = get_RMSE(test_y[::50], np.array(regressed_output.T)[0])
+
+    RMSEs_against_training.append(rmse_regression_vs_training)
+    RMSEs_against_testing.append(rmse_regression_vs_testing)
         
     print()
 
+plt.semilogx(lambds, RMSEs_against_training,
+            label="RMSE Against Training Data")
 
-
+plt.semilogx(lambds, RMSEs_against_testing,
+            label="RMSE Against Testing Data")
+plt.legend()
+plt.xlabel("Regularizer")
+plt.ylabel("RMSE")
+plt.title("RMSEs Against Training & Testing Data")
+plt.show()
 
 
 
