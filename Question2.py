@@ -54,19 +54,21 @@ print()
 print("B)")
 
 xmax = 10
-learning_rates = np.linspace(0.1, xmax, xmax)
+#learning_rates = np.linspace(0.001, xmax, xmax)
+learning_rates = np.logspace(start = -6, stop = 4, num = 100)
 accuracies = []
 num_misclassifications = np.zeros((10, 10))
 
+X_train, X_test, Y_train, Y_test = sklearn.model_selection.train_test_split(
+    digits.data, digits.target, test_size=0.2, shuffle=True,
+)
+
 for learning_rate in learning_rates:
+    
+#    print("rate: ", learning_rate)
     
     perceptron = sklearn.linear_model.Perceptron(eta0 = learning_rate)
 
-
-    X_train, X_test, Y_train, Y_test = sklearn.model_selection.train_test_split(
-        digits.data, digits.target, test_size=0.2, shuffle=True,
-    )
-    
     perceptron.fit(X_train, Y_train)
     
     predictions = perceptron.predict(X_test)
@@ -80,7 +82,7 @@ for learning_rate in learning_rates:
             num_misclassifications[actual][prediction] += 1
             
     pct_accuracy = round(100 * correct_predictions / len(Y_test), 2)
-    print("Learning Rate: ", round(learning_rate, 2), ". Accuracy: ", pct_accuracy)
+#    print("Learning Rate: ", round(learning_rate, 2), ". Accuracy: ", pct_accuracy)
     
     accuracies.append(pct_accuracy)
         
@@ -88,12 +90,12 @@ for learning_rate in learning_rates:
 
 
 plt.figure(figsize=(6,6))
-plt.scatter(learning_rates, accuracies)
+plt.semilogx(learning_rates, accuracies)
 plt.xlabel('Learning Rate')
 plt.ylabel('% Accuracy')
 
 plt.xlim(0, xmax)
-plt.ylim(0, 100)
+#plt.ylim(90, 100)
 
 plt.title("2B) Accuracy Vs Learning Rate")
 plt.show()
